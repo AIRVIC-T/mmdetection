@@ -1,0 +1,51 @@
+_base_ = [
+    './tood-rcnn-bcfn_r50_fpn_3x_mar20.py'
+]
+
+model = dict(
+    rpn_head=dict(
+        stacked_convs=4,
+        out_score=True,
+        initial_loss_cls=dict(
+            loss_weight=0.5
+        ),
+        loss_cls=dict(
+            loss_weight=1.0,
+        ),
+        loss_bbox=dict(
+            loss_weight=1.0,
+        )
+    ),
+    roi_head=dict(
+        bbox_roi_extractor=dict(
+            type='SingleRoIExtractorWithScore',
+        ),
+        bbox_head=dict(
+            type='Shared2FCBBoxARLHead',
+            loss_cls=dict(
+                type='AdaptiveRecognitionLoss',
+                beta=2.5,
+                gamma=1.5,
+                loss_weight=1.0),
+        )
+    ),
+    train_cfg=dict(
+        rpn_proposal=dict(
+            nms_pre=2000,
+            max_per_img=500,
+        ),
+        rcnn=dict(
+            sampler=dict(
+                _delete_=True,
+                type='PseudoSampler')),
+    ),
+    test_cfg=dict(
+        rpn=dict(
+            nms_pre=2000,
+            max_per_img=500,
+        ),
+        rcnn=dict(
+            nms_pre=500,
+            max_per_img=100)
+    )
+)

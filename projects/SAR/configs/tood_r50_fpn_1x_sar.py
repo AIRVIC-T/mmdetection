@@ -1,5 +1,5 @@
 _base_ = [
-    './sar',
+    './sar.py',
     'mmdet::_base_/schedules/schedule_3x.py', 'mmdet::_base_/default_runtime.py'
 ]
 

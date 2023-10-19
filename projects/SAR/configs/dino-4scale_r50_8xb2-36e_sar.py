@@ -1,5 +1,6 @@
 _base_ = [
-    'mmdet::_base_/datasets/mar20_h.py', 'mmdet::_base_/default_runtime.py'
+    './sar.py',
+    'mmdet::_base_/default_runtime.py'
 ]
 model = dict(
     type='DINO',

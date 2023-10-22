@@ -1,18 +1,18 @@
 # dataset settings
-dataset_type = 'XMLDataset'
+dataset_type = 'FHBDataset'
 data_root = 'data/MAR20/'
 backend_args = None
 
 train_pipeline = [
     dict(type='LoadImageFromFile', backend_args=backend_args),
     dict(type='LoadAnnotations', with_bbox=True),
-    dict(type='Resize', scale=(640, 640), keep_ratio=True),
+    dict(type='Resize', scale=(800, 800), keep_ratio=True),
     dict(type='RandomFlip', prob=0.5),
     dict(type='PackDetInputs')
 ]
 test_pipeline = [
     dict(type='LoadImageFromFile', backend_args=backend_args),
-    dict(type='Resize', scale=(640, 640), keep_ratio=True),
+    dict(type='Resize', scale=(800, 800), keep_ratio=True),
     dict(type='LoadAnnotations', with_bbox=True),
     dict(
         type='PackDetInputs',
@@ -28,7 +28,7 @@ metainfo = dict(
         'A20'))
 
 train_dataloader = dict(
-    batch_size=16,
+    batch_size=2,
     num_workers=2,
     persistent_workers=True,
     sampler=dict(type='DefaultSampler', shuffle=True),
@@ -36,8 +36,8 @@ train_dataloader = dict(
         type=dataset_type,
         metainfo=metainfo,
         data_root=data_root,
-        ann_file='ImageSets/Main/train.txt',
-        ann_subdir='Annotations/Horizontal Bounding Boxes',
+        ann_file='ImageSets/Main/test.txt',
+        ann_subdir='/home/lwt/work/mmdetection/test_output',
         data_prefix=dict(sub_data_root=''),
         filter_cfg=dict(
             filter_empty_gt=True, min_size=32, bbox_min_size=32),
@@ -46,7 +46,7 @@ train_dataloader = dict(
         backend_args=backend_args))
 
 val_dataloader = dict(
-    batch_size=8,
+    batch_size=1,
     num_workers=2,
     persistent_workers=True,
     drop_last=False,
@@ -56,7 +56,7 @@ val_dataloader = dict(
         metainfo=metainfo,
         data_root=data_root,
         ann_file='ImageSets/Main/test.txt',
-        ann_subdir='Annotations/Horizontal Bounding Boxes',
+        ann_subdir='/home/lwt/work/mmdetection/test_output',
         data_prefix=dict(sub_data_root=''),
         test_mode=True,
         pipeline=test_pipeline,

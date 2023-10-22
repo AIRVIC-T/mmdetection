@@ -1,6 +1,6 @@
 # dataset settings
 dataset_type = 'XMLDataset'
-data_root = 'data/MAR20/'
+data_root = 'data/DIOR/'
 backend_args = None
 
 train_pipeline = [
@@ -22,10 +22,9 @@ test_pipeline = [
 
 metainfo = dict(
     classes=(
-        'A1', 'A2', 'A3', 'A4', 'A5', 'A6', 'A7',
-        'A8', 'A9', 'A10', 'A11', 'A12', 'A13',
-        'A14', 'A15', 'A16', 'A17', 'A18', 'A19',
-        'A20'))
+        'airplane', 'airport', 'baseballfield', 'basketballcourt', 'bridge', 'chimney', 'dam',
+        'Expressway-Service-area', 'Expressway-toll-station', 'golffield', 'groundtrackfield', 'harbor',
+        'overpass', 'ship', 'stadium', 'storagetank', 'tenniscourt', 'trainstation', 'vehicle', 'windmill'))
 
 train_dataloader = dict(
     batch_size=16,
@@ -36,8 +35,9 @@ train_dataloader = dict(
         type=dataset_type,
         metainfo=metainfo,
         data_root=data_root,
-        ann_file='ImageSets/Main/train.txt',
+        ann_file='Main/train.txt',
         ann_subdir='Annotations/Horizontal Bounding Boxes',
+        img_subdir='JPEGImages-trainval',
         data_prefix=dict(sub_data_root=''),
         filter_cfg=dict(
             filter_empty_gt=True, min_size=32, bbox_min_size=32),
@@ -55,8 +55,9 @@ val_dataloader = dict(
         type=dataset_type,
         metainfo=metainfo,
         data_root=data_root,
-        ann_file='ImageSets/Main/test.txt',
+        ann_file='Main/test.txt',
         ann_subdir='Annotations/Horizontal Bounding Boxes',
+        img_subdir='JPEGImages-test',
         data_prefix=dict(sub_data_root=''),
         test_mode=True,
         pipeline=test_pipeline,

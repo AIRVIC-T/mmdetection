@@ -125,7 +125,7 @@ class DetLocalVisualizer(Visualizer):
 
         if 'bboxes' in instances and instances.bboxes.sum() > 0:
             bboxes = instances.bboxes
-            labels = instances.labels.int()
+            labels = instances.labels
 
             max_label = int(max(labels) if len(labels) > 0 else 0)
             text_palette = get_palette(self.text_color, max_label + 1)

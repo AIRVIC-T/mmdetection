@@ -10,8 +10,8 @@ import copy
 import os
 
 from mmdet.registry import MODELS
-from mmdet.utils import get_root_logger
-from mmcv.runner import _load_checkpoint
+from mmengine.logging import MMLogger
+from mmengine.runner.checkpoint import _load_checkpoint
 
 
 class Partial_conv3(nn.Module):
@@ -305,7 +305,7 @@ class FasterNet(nn.Module):
 
     # init for mmdetection by loading imagenet pre-trained weights
     def init_weights(self, pretrained=None):
-        logger = get_root_logger()
+        logger = MMLogger.get_current_instance()
         if self.init_cfg is None and pretrained is None:
             logger.warn(f'No pre-trained weights for '
                         f'{self.__class__.__name__}, '
@@ -400,6 +400,36 @@ def fasternet_l(**kwargs):
         depths=(3, 4, 18, 3),
         drop_path_rate=0.3,
         act_layer='RELU',
+        fork_feat=True,
+        **kwargs
+    )
+
+    return model
+
+
+@MODELS.register_module()
+def fasternet_t0(**kwargs):
+    model = FasterNet(
+        mlp_ratio=2.0,
+        embed_dim=40,
+        depths=(1, 2, 8, 2),
+        drop_path_rate=0,
+        act_layer='GELU',
+        fork_feat=True,
+        **kwargs
+    )
+
+    return model
+
+
+@MODELS.register_module()
+def fasternet_t1(**kwargs):
+    model = FasterNet(
+        mlp_ratio=2.0,
+        embed_dim=64,
+        depths=(1, 2, 8, 2),
+        drop_path_rate=0,
+        act_layer='GELU',
         fork_feat=True,
         **kwargs
     )

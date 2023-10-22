@@ -640,10 +640,10 @@ class QualityRPNHead(AnchorFreeHead):
         mlvl_valid_priors = []
         mlvl_scores = []
         level_ids = []
+        #print(len(cls_score_list))
         for level_idx, (cls_score, bbox_pred, priors) in \
                 enumerate(zip(cls_score_list, bbox_pred_list,
                               mlvl_priors)):
-
             # Equivalent substitution of ``@force_fp32()``
             cls_score = cls_score.float()
             bbox_pred = bbox_pred.float()
@@ -673,6 +673,8 @@ class QualityRPNHead(AnchorFreeHead):
             mlvl_bbox_preds.append(bbox_pred)
             mlvl_valid_priors.append(priors)
             mlvl_scores.append(scores)
+
+            # use level id to implement the separate level nms
             level_ids.append(
                 scores.new_full((scores.size(0), ),
                                 level_idx,
@@ -835,8 +837,8 @@ class QualityRPNHead(AnchorFreeHead):
         Returns:
             Tensor: Anchor centers with shape (N, 2), "xy" format.
         """
-        anchors_cx = (anchors[:, 2] + anchors[:, 0]) / 2
-        anchors_cy = (anchors[:, 3] + anchors[:, 1]) / 2
+        anchors_cx = (anchors[..., 2] + anchors[..., 0]) / 2
+        anchors_cy = (anchors[..., 3] + anchors[..., 1]) / 2
         return torch.stack([anchors_cx, anchors_cy], dim=-1)
 
     def get_num_level_anchors_inside(self, num_level_anchors, inside_flags):

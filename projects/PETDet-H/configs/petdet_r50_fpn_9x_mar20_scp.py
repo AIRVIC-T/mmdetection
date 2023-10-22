@@ -1,5 +1,5 @@
 _base_ = [
-    './sar.py', 'mmdet::_base_/schedules/schedule_3x.py',
+    'mmdet::_base_/datasets/mar20_scp_lsj.py', 'mmdet::_base_/schedules/schedule_3x.py',
     'mmdet::_base_/default_runtime.py'
 ]
 
@@ -10,8 +10,8 @@ model = dict(
     type='PETDetHorizontal',
     data_preprocessor=dict(
         type='DetDataPreprocessor',
-        mean=[23.896, 23.896, 23.896],
-        std=[30.567, 30.567, 30.567],
+        mean=[123.675, 116.28, 103.53],
+        std=[58.395, 57.12, 57.375],
         bgr_to_rgb=True,
         pad_size_divisor=32),
     backbone=dict(
@@ -19,7 +19,7 @@ model = dict(
         depth=50,
         num_stages=4,
         out_indices=(0, 1, 2, 3),
-        frozen_stages=-1,
+        frozen_stages=1,
         norm_cfg=dict(type='BN', requires_grad=True),
         norm_eval=True,
         style='pytorch',
@@ -150,3 +150,46 @@ log_processor = dict(
              method_name='mean',
              window_size=50),
     ])
+
+# aug
+load_pipeline = [
+    dict(type='LoadImageFromFile', backend_args={{_base_.backend_args}}),
+    dict(type='LoadAnnotations', with_bbox=True),
+    dict(type='Resize', scale=(800, 800), keep_ratio=False),
+    dict(
+        type='PhotoMetricDistortion',
+        brightness_delta=32,
+        contrast_range=(0.5, 1.5),
+        saturation_range=(0.5, 1.5),
+        hue_delta=18),
+    dict(type='RandomFlip', prob=0.5),
+    dict(type='BoxJitter', amplitude=0.05),
+    # dict(type='PackDetInputs')
+]
+train_dataloader = dict(dataset=dict(
+    dataset=dict(dataset=dict(pipeline=load_pipeline))))
+
+# train_pipeline = [
+#     dict(
+#         type='RandomChoice',
+#         transforms=[
+#             dict(type='CopyPaste', max_num_pasted=100,
+#                  bbox_occluded_thr=10,
+#                  mask_occluded_thr=300,
+#                  paste_by_box=True),
+#             dict(
+#                 type='MixUp',
+#                 img_scale=(800, 800),
+#                 ratio_range=(1, 1),
+#                 pad_val=114.0,
+#                 bbox_clip_border=True)]),
+#     dict(type='PackDetInputs')
+# ]
+custom_hooks = [
+    dict(
+        type='EMAHook',
+        ema_type='ExpMomentumEMA',
+        momentum=0.0002,
+        update_buffers=True,
+        priority=49)
+]

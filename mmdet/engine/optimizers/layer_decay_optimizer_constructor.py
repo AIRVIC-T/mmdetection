@@ -9,6 +9,14 @@ from mmengine.optim import DefaultOptimWrapperConstructor
 
 from mmdet.registry import OPTIM_WRAPPER_CONSTRUCTORS
 
+def get_layer_id_for_vanillanet(var_name, max_layer_id):
+    if var_name.startswith("backbone.stem"):
+        return 0
+    elif var_name.startswith("backbone.stages"):
+        stage_id = int(var_name.split('.')[2])
+        return stage_id // 2 + 1
+    else:
+        return max_layer_id + 1
 
 def get_layer_id_for_convnext(var_name, max_layer_id):
     """Get the layer id to set the different learning rates in ``layer_wise``
@@ -118,6 +126,10 @@ class LearningRateDecayOptimizerConstructor(DefaultOptimWrapperConstructor):
             if 'layer_wise' in decay_type:
                 if 'ConvNeXt' in module.backbone.__class__.__name__:
                     layer_id = get_layer_id_for_convnext(
+                        name, self.paramwise_cfg.get('num_layers'))
+                    logger.info(f'set param {name} as id {layer_id}')
+                elif 'Vanillanet' in module.backbone.__class__.__name__:
+                    layer_id = get_layer_id_for_vanillanet(
                         name, self.paramwise_cfg.get('num_layers'))
                     logger.info(f'set param {name} as id {layer_id}')
                 else:

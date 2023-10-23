@@ -8,7 +8,7 @@ from .convfc_bbox_arl_contrast_head import (
     Shared2FCBBoxARLContrastHead,
 )
 from .convfc_rbbox_arl_head import ConvFCBBoxARLHead, Decoupled2FC2Conv1FCBBoxARLHead
-from .fasternet import FasterNet, fasternet_l, fasternet_m, fasternet_s, fasternet_t1
+from .fasternet import FasterNet, fasternet_l, fasternet_m, fasternet_s, fasternet_t1, fasternet_t0,fasternet_t2
 from .fhb_metric import FHBMetric
 from .fhb_style import FHBDataset
 from .petdet import PETDetHorizontal

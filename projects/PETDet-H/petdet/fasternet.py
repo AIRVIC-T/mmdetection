@@ -435,3 +435,17 @@ def fasternet_t1(**kwargs):
     )
 
     return model
+
+@MODELS.register_module()
+def fasternet_t2(**kwargs):
+    model = FasterNet(
+        mlp_ratio=2.0,
+        embed_dim=96,
+        depths=(1, 2, 8, 2),
+        drop_path_rate=0.05,
+        act_layer='RELU',
+        fork_feat=True,
+        **kwargs
+    )
+
+    return model

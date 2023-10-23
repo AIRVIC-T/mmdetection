@@ -147,13 +147,6 @@ param_scheduler = [
         by_epoch=False,
         begin=0,
         end=1000),
-    # dict(
-    #     type='MultiStepLR',
-    #     begin=0,
-    #     end=36,
-    #     by_epoch=True,
-    #     milestones=[24, 33],
-    #     gamma=0.1)
     dict(
         # use cosine lr from 150 to 300 epoch
         type='CosineAnnealingLR',
@@ -164,15 +157,6 @@ param_scheduler = [
         by_epoch=True,
         convert_to_iter_based=True),
 ]
-
-# optimizer
-# optim_wrapper = dict(
-#     type='OptimWrapper',
-#     optimizer=dict(type='SGD', lr=0.02, momentum=0.9, weight_decay=0.0001),
-#     clip_grad=dict(max_norm=35, norm_type=2))
-
-
-
 
 train_pipeline = [
     dict(type='LoadImageFromFile', backend_args={{_base_.backend_args}}),

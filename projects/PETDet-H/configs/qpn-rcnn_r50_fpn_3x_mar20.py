@@ -1,5 +1,5 @@
 _base_ = [
-    'mmdet::_base_/datasets/mar20_h.py', 'mmdet::_base_/schedules/schedule_3x.py',
+    'mmdet::_base_/datasets/mar20.py', 'mmdet::_base_/schedules/schedule_3x.py',
     'mmdet::_base_/default_runtime.py'
 ]
 

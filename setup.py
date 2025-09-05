@@ -23,9 +23,10 @@ version_file = 'mmdet/version.py'
 
 
 def get_version():
+    d = {}
     with open(version_file, 'r') as f:
-        exec(compile(f.read(), version_file, 'exec'))
-    return locals()['__version__']
+        exec(compile(f.read(), version_file, 'exec'), globals(), d)
+    return d['__version__']
 
 
 def make_cuda_ext(name, module, sources, sources_cuda=[]):
